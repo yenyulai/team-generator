@@ -1,7 +1,7 @@
 team-generator
 
 ===
-![alt text](https://github.com/yenyulai/Password_Guard/blob/main/images/Password_Guard.png?raw=true)
+![alt text](https://github.com/yenyulai/team-generator/blob/main/images/Team-Generator.png?raw=true)
 
 ## Installation
 
@@ -20,11 +20,8 @@ team-generator
   
   
   To generate the team in team.html
-
-  ![alt text](raw=true)
-  ![alt text](?raw=true)
   
-  ![]()
+  ![](https://github.com/yenyulai/team-generator/blob/main/images/Team-generator_%20Dec%209%2C%202020T%209_43%20PM.gif)
   
 
 
