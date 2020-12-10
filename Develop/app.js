@@ -9,52 +9,126 @@ const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
+const Employee = require("./lib/Employee");
 
 
 // Write code to use inquirer to gather information about the development team members,
-// Step 1 - Inquirer input
-const name = 'Jason Chang';
-const email = 'jason@gmail.com';
-const officeNumber = '001';
-const id = 'id_1'
 
-inquirer
-  .prompt([
-    {
-      name: 'Role',
-      message: 'What is your role?',
-      default: 'Engineer',
+
+var memberList = [];
+
+// Create Inquirer questions
+function init(){
+    var questions = [
+        {
+          type: 'list',
+          name: 'Role',
+          message: 'What is your role?',
+          choices: ['Manager', 'Engineer', 'Intern'],
+        },
+        {
+          name: 'Name',
+          message: 'What is your name',
+          default: 'Peter Black',
+        },
+        {
+            name: 'Email',
+            message: 'What is your email address',
+            default: 'abc@gmail.com',
+        },
+
+        {
+            name: 'Id',
+            message: 'What is your ID number',
+        },
+        
+      {
+        name: 'OfficeNum',
+        message: 'What is your office number',
+        when: (answers) => answers.Role === 'Manager'
+     },
+     {
+        name: 'Github',
+        message: 'What is your git hub username',
+        when: (answers) => answers.Role === 'Engineer'
     },
     {
-      name: 'Name',
-      message: 'What is your name',
-      default: 'Peter Black',
+        name: 'School',
+        message: 'What is your school name',
+        when: (answers) => answers.Role === 'Intern'
     },
     {
-        name: 'Email',
-        message: 'What is your email address',
-        default: 'abc@gmail.com',
+        type: 'list',
+        name: 'Continue',
+        message: 'Do you want to keep entering your team member',
+        choices: ['Yes', 'No'],
     },
-    {
-        name: 'Id',
-        message: 'What is your id number',
-        default: '001',
-    },
-
-
-  ])
-  .then(answers => {
-    console.info('Answers:', answers);
-  });
-
-
+    
+      ]
+  
+      generateObjects(questions)
+}
 
 //Step 2 - create Objects by Class
-var manager_1 = new Manager(name, id, email, officeNumber);
-manager_1.getRole();
-manager_1.getRole();
+function generateObjects(questions){
+    // Call generate function
+    inquirer
+    .prompt(questions)
+    .then(answers => {
+
+    //Every round of question, I will generate a new obj 
+
+    if(answers.Role === "Manager"){
+        var person1 = new Manager(answers.Name, answers.Id, answers.Email, answers.OfficeNum);  
+        memberList.push(person1);
+        
+    }else if(answers.Role === "Engineer"){
+        person1 = new Engineer(answers.Name, answers.Id, answers.Email, answers.Github);  
+        memberList.push(person1);
+    
+    }else{
+        person1 = new Intern(answers.Name, answers.Id, answers.Email, answers.School);  
+        memberList.push(person1);
+        console.log(memberList); 
+    }
+
+    if(answers.Continue === "Yes"){
+        generateObjects(questions);
+    }else{
+        // call render
+        // console.log(memberList);
+        callRender(memberList);
+    }
+
+
+    });
+
+}
+
+ 
+
+function callRender(memberList){
+    // Gererate Html content
+    var resutl = render(memberList);
+
+    // output a file by html content & output path
+    fs.writeFile(outputPath, resutl, (error) => { 
+        // In case of a error throw err. 
+        if (error) throw error; 
+    });
+
+
+}
+
+
+//Call Initial function
+init();
+
+
+
 
 // Step 3 - call render
+
 // const output = render([manager_1, engineer_1, engineer_2,.....])
 
 
